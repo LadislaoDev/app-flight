@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+:root {
+    --font-family-base: 'Roboto', sans-serif;
+}
+
+html, body {
+    font-family: 'Roboto', sans-serif !important;
+}
+
+$body-font-family: var(--font-family-base);
+$headings-font-family: var(--font-family-base);
+
+@import 'variables';
+
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-vue/dist/bootstrap-vue.css';
+@import '~sweetalert2/dist/sweetalert2';
+@import '~@fortawesome/fontawesome-svg-core/styles';
+@import "~vue-select/src/scss/vue-select.scss";
+@import 'elements/card';
+@import 'elements/navbar';
+@import 'elements/buttons';
+@import 'elements/transitions';
+
+@import 'components/server-error';
