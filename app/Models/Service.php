@@ -7,29 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'description', 'patient_id', 'hospital_id', 'user_id', 'date'
+        'date', 'flight_number', 'door', 'origin_id', 'destiny_id', 'hour', 'seat', 'weight', 'quantity', 'ticket', 'total', 'age_id', 'passenger_id'
     ];
 
-    public function hospital()
+    public function origin()
     {
-        return $this->belongsTo(Hospital::class);
+        return $this->belongsTo(City::class);
     }
 
-    public function patient()
+    public function destiny()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(City::class);
+    }
+    
+    public function age()
+    {
+        return $this->belongsTo(Age::class);
     }
 
-    public function user()
+    public function passenger()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function benefits()
-    {
-        return $this->belongsToMany(Benefit::class)->withTimestamps()->withPivot('id', 'quantity', 'observation');
+        return $this->belongsTo(Passenger::class);
     }
 }

@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Hospital extends Model
+class City extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'address'
+        'name'
     ];
 
-    public static function listHospitals()
+    public static function listCities()
     {
-        return static::orderBy('id', 'DESC')->select('id', 'name', 'address')->get();
+        return static::orderBy('id', 'DESC')->select('id', 'name')->get();
     }
 
     public function services()

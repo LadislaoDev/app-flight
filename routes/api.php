@@ -9,9 +9,10 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
-use App\Http\Controllers\HospitalController;
-use App\Http\Controllers\PatientController;
-use App\Http\Controllers\BenefitController;
+use App\Http\Controllers\AgeController;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\TypeController;
+use App\Http\Controllers\PassengerController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,14 +31,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', [LoginController::class, 'logout']);
 
     Route::get('user', [UserController::class, 'current']);
-    Route::get('list/hospitals', [HospitalController::class, 'listHospitals']);
-    Route::get('list/benefits', [BenefitController::class, 'listBenefits']);
-    Route::get('services/search', [PatientController::class, 'search']);
-    Route::post('patients/search', [PatientController::class, 'searchPatient']);
-    Route::post('patients', [PatientController::class, 'create']);
+    Route::get('list/ages', [AgeController::class, 'listAges']);
+    Route::get('list/cities', [CityController::class, 'listCities']);
+    Route::get('types', [TypeController::class, 'index']);
+    Route::post('passengers/search', [PassengerController::class, 'search']);
+    Route::post('passengers', [PassengerController::class, 'create']);
     Route::post('services', [ServiceController::class, 'create']);
-    Route::patch('settings/profile', [ProfileController::class, 'update']);
-    Route::patch('settings/password', [PasswordController::class, 'update']);
+    Route::get('services/{service}', [ServiceController::class, 'generatePDF']);
 });
 
 Route::group(['middleware' => 'guest:api'], function () {

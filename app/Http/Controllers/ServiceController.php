@@ -2,105 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Service;
 use Illuminate\Http\Request;
-use App\Http\Requests\Service\ServiceCreateRequest;
+use App\Exports\PdfExport;
+use App\Transformers\ServiceTransformer;
 use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
     private $service;
 
-    public function __construct(Service $service)
+    protected $transformer;
+
+    public function __construct(Service $service, ServiceTransformer $transformer)
     {
         $this->service = $service;
+
+        $this->transformer = $transformer;
     }
 
-    public function create(ServiceCreateRequest $request)
+    public function create(Request $request)
     {
-        // Obtener el mes actual
-        $mesActual = Carbon::now()->month;
-
-        $errores = [];
-
-        // Buscar todos los servicios del mes actual para el paciente
-        $serviciosDelMes = $this->service->where('patient_id', $request->service['patient_id'])
-                                        ->whereMonth('date', $mesActual)
-                                        ->get();
-
-        // Verificar si alguno de los servicios ya tiene algún benefit_id en su tabla pivote
-        foreach ($serviciosDelMes as $servicio) {
-            foreach ($request->benefits as $key => $value) {
-                $existeRegistro = $this->verificarRegistroExistente($servicio->id, $value['benefit_id']);
-    
-                // if ($existeRegistro) {
-                //     // Obtener el nombre del beneficio
-                //     $nombreBeneficio = $this->obtenerNombreBeneficio($value['benefit_id']);
-    
-                //     $errores[] = "El beneficio '$nombreBeneficio' del item " . ($key + 1) . " ya se registro para el paciente en el mes actual.";
-                // }
-
-                if ($existeRegistro) {
-                    // Verificar si han pasado menos de 30 días desde el último registro
-                    $fechaUltimoRegistro = $this->obtenerFechaUltimoRegistro($servicio->id, $value['benefit_id']);
-    
-                    if ($fechaUltimoRegistro && Carbon::now()->diffInDays($fechaUltimoRegistro) < 30) {
-                        $rest = 30 - Carbon::now()->diffInDays($fechaUltimoRegistro);
-                        // Obtener el nombre del beneficio
-                        $nombreBeneficio = $this->obtenerNombreBeneficio($value['benefit_id']);
-    
-                        // Almacenar el error en el array
-                        $errores[] = "El beneficio '$nombreBeneficio' del item " . ($key + 1) . " ya fue registrado en el mes actual, registro en 30 días. (restantes: $rest Días)";
-                    }
-                }
-            }
-        }
-
-        // Si hay errores, devolver el array de errores
-        if (!empty($errores)) {
-            return response()->json(['errors' => $errores], 406);
-        }
-
         $service = $this->service->create([
-            'description' => $request->service['description'],
-            'patient_id' => $request->service['patient_id'],
-            'hospital_id' => $request->service['hospital_id'],
-            'user_id' => $request->user()->id,
-            'date' => $request->service['date'],
+            'date' =>  $request->date, 
+            'flight_number' =>  $request->flight_number,
+            'door' =>  $request->door,
+            'origin_id' =>  $request->origin,
+            'destiny_id' =>  $request->destiny,
+            'hour' =>  $request->hour,
+            'seat' =>  $request->seat,
+            'weight' =>  $request->weight,
+            'quantity' =>  $request->quantity,
+            'ticket' =>  $request->ticket,
+            'total' =>  $request->total,
+            'age_id' =>  $request->age_id,
+            'passenger_id' =>  $request->passenger_id
         ]);
 
-        foreach ($request->benefits as $key => $value) {
-            $service->benefits()->attach($value['benefit_id'], [
-                'quantity' => $value['quantity'], 
-                'observation' => $value['observation'], 
-            ]);
-        }
+        DB::table('places')->where('id', $request->seat_id)->update(['state' => 1, 'disabled' => 1]);
 
         return response()->json(['success' => true, 'data' => $service], 200);
     }
 
-    private function verificarRegistroExistente($serviceId, $benefitId)
+    public function generatePDF(Service $service)
     {
-        return DB::table('benefit_service')
-        ->where('service_id', $serviceId)
-        ->where('benefit_id', $benefitId)
-        ->exists();
-    }
+        $data = $this->transformer->item($service);
 
-    private function obtenerNombreBeneficio($benefitId)
-    {
-        return DB::table('benefits')
-            ->where('id', $benefitId)
-            ->value('name');
-    }
-
-    private function obtenerFechaUltimoRegistro($serviceId, $benefitId)
-    {
-    return DB::table('benefit_service')
-        ->where('service_id', $serviceId)
-        ->where('benefit_id', $benefitId)
-        ->latest('created_at')
-        ->value('created_at');
+        $export = new PdfExport('boarding.pass', ['service' => $data['service']]);
+        return $export->setMargin(2,2,2,2)->download();
     }
 }

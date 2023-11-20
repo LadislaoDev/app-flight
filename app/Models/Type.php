@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Patient extends Model
+class Type extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'names', 'surnames', 'ci', 'phone', 'birth'
+        'name', 'row', 'column'
     ];
 
-    public function services()
+    public function places()
     {
-        return $this->hasMany(Service::class);
+        return $this->hasMany(Place::class);
     }
 }
