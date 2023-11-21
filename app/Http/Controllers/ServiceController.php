@@ -6,6 +6,7 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use App\Exports\PdfExport;
 use App\Transformers\ServiceTransformer;
+use App\Http\Resources\Service\ServiceManifestCollection;
 use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
@@ -50,5 +51,14 @@ class ServiceController extends Controller
 
         $export = new PdfExport('boarding.pass', ['service' => $data['service']]);
         return $export->setMargin(2,2,2,2)->download();
+    }
+
+    public function getCheckinManifest(Request $request)
+    {
+        $services = $this->service->where('date', $request->date)
+        ->when($request->flight_number, function($query) use ($request) {
+            $query->where('flight_number', $request->flight_number);
+        })->get();
+        return new ServiceManifestCollection($services);
     }
 }

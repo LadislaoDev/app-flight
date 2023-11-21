@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('passengers', [PassengerController::class, 'create']);
     Route::post('services', [ServiceController::class, 'create']);
     Route::get('services/{service}', [ServiceController::class, 'generatePDF']);
+    Route::post('services/manifest', [ServiceController::class, 'getCheckinManifest']);
 });
 
 Route::group(['middleware' => 'guest:api'], function () {
