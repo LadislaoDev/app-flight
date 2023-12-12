@@ -14,6 +14,8 @@ export default [
 
   { path: '/home', name: 'home', component: page('home.vue') },
   { path: '/services', name: 'services', component: page('service/index.vue') },
+  { path: '/users', name: 'users', component: page('users/index.vue') },
+  { path: '/flights', name: 'flights', component: page('flights/index.vue') },
   {
     path: '/settings',
     component: page('settings/index.vue'),

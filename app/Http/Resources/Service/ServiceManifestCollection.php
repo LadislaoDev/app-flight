@@ -27,12 +27,12 @@ class ServiceManifestCollection extends ResourceCollection
 
             return [
                 'id' => $service->id,
-                'date' => Carbon::parse($service->date)->format('d/m/Y'),
-                'flight_number' => $service->flight_number,
+                'date' => Carbon::parse($service->flight->date)->format('d/m/Y'),
+                'flight_number' => $service->flight->number,
                 'door' => $service->door,
-                'origin' => $service->origin->name,
-                'destiny' => $service->destiny->name,
-                'hour' => $service->hour,
+                'origin' => $service->flight->origin->name,
+                'destiny' => $service->flight->destiny->name,
+                'hour' => $service->flight->hour,
                 'seat' => $service->seat,
                 'weight' => $service->weight,
                 'kg' => $kg,

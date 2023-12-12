@@ -20,6 +20,8 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'type',
+        'city_id',
         'password',
     ];
 
@@ -52,6 +54,11 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     public function services()
     {
         return $this->hasMany(Service::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 
     public function sendPasswordResetNotification($token)

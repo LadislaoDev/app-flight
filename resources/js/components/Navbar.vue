@@ -28,6 +28,16 @@
               Manifiesto
             </router-link>
           </li>
+          <li class="nav-item" v-if="user.type == 'admin'">
+            <router-link :to="{ name: 'users' }" class="nav-link" exact exact-active-class="active">
+              Usuarios
+            </router-link>
+          </li>
+          <li class="nav-item" v-if="user.type == 'admin'">
+            <router-link :to="{ name: 'flights' }" class="nav-link" exact exact-active-class="active">
+              Vuelos
+            </router-link>
+          </li>
         </ul>
 
         <ul class="navbar-nav ms-auto">
@@ -37,15 +47,16 @@
                href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
             >
               <img :src="user.photo_url" class="rounded-circle profile-photo me-1">
-              Operador: {{ user.name }}
+              
+              <span v-if="user.type == 'admin'">Administrador: {{ user.name }}</span>
+              <span v-else>Operador: {{ user.name }}</span>
             </a>
             <div class="dropdown-menu">
-              <router-link :to="{ name: 'settings.profile' }" class="dropdown-item ps-3">
+              <!-- <router-link :to="{ name: 'settings.profile' }" class="dropdown-item ps-3">
                 <fa icon="cog" fixed-width />
                 {{ $t('settings') }}
-              </router-link>
+              </router-link> -->
 
-              <div class="dropdown-divider" />
               <a href="#" class="dropdown-item ps-3" @click.prevent="logout">
                 <fa icon="sign-out-alt" fixed-width />
                 {{ $t('logout') }}
@@ -57,11 +68,6 @@
             <li class="nav-item">
               <router-link :to="{ name: 'login' }" class="nav-link" active-class="active">
                 {{ $t('login') }}
-              </router-link>
-            </li>
-            <li class="nav-item">
-              <router-link :to="{ name: 'register' }" class="nav-link" active-class="active">
-                {{ $t('register') }}
               </router-link>
             </li>
           </template>

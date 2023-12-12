@@ -14,6 +14,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\PassengerController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\FlightController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +40,19 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('services', [ServiceController::class, 'create']);
     Route::get('services/{service}', [ServiceController::class, 'generatePDF']);
     Route::post('services/manifest', [ServiceController::class, 'getCheckinManifest']);
+
+    //users
+    Route::get('users', [UserController::class, 'index']);
+    Route::post('register/user', [UserController::class, 'register']);
+    Route::put('update/user/{user}', [UserController::class, 'update']);
+    Route::delete('delete/user/{user}', [UserController::class, 'delete']);
+
+    //flights
+    Route::get('flights', [FlightController::class, 'index']);
+    Route::post('register/flight', [FlightController::class, 'register']);
+    Route::post('flights/search', [FlightController::class, 'search']);
+    Route::put('update/flight/{flight}', [FlightController::class, 'update']);
+    Route::delete('delete/flight/{flight}', [FlightController::class, 'delete']);
 });
 
 Route::group(['middleware' => 'guest:api'], function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+use App\Http\Requests\Service\ServiceRequest;
 use App\Exports\PdfExport;
 use App\Transformers\ServiceTransformer;
 use App\Http\Resources\Service\ServiceManifestCollection;
@@ -22,22 +23,19 @@ class ServiceController extends Controller
         $this->transformer = $transformer;
     }
 
-    public function create(Request $request)
+    public function create(ServiceRequest $request)
     {
         $service = $this->service->create([
             'date' =>  $request->date, 
-            'flight_number' =>  $request->flight_number,
             'door' =>  $request->door,
-            'origin_id' =>  $request->origin,
-            'destiny_id' =>  $request->destiny,
-            'hour' =>  $request->hour,
             'seat' =>  $request->seat,
             'weight' =>  $request->weight,
             'quantity' =>  $request->quantity,
             'ticket' =>  $request->ticket,
             'total' =>  $request->total,
             'age_id' =>  $request->age_id,
-            'passenger_id' =>  $request->passenger_id
+            'passenger_id' =>  $request->passenger_id,
+            'flight_id' =>  $request->flight_id
         ]);
 
         DB::table('places')->where('id', $request->seat_id)->update(['state' => 1, 'disabled' => 1]);
@@ -55,10 +53,11 @@ class ServiceController extends Controller
 
     public function getCheckinManifest(Request $request)
     {
-        $services = $this->service->where('date', $request->date)
-        ->when($request->flight_number, function($query) use ($request) {
-            $query->where('flight_number', $request->flight_number);
-        })->get();
+        $services = $this->service->whereHas('flight', function ($query) use ($request) {
+            $query->where('number', $request->flight_number);
+        })
+        ->where('date', $request->date)
+        ->get();
         return new ServiceManifestCollection($services);
     }
 }

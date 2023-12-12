@@ -8,18 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     protected $fillable = [
-        'date', 'flight_number', 'door', 'origin_id', 'destiny_id', 'hour', 'seat', 'weight', 'quantity', 'ticket', 'total', 'age_id', 'passenger_id'
+        'date', 'door', 'seat', 'weight', 'quantity', 'ticket', 'total', 'age_id', 'passenger_id', 'flight_id'
     ];
 
-    public function origin()
-    {
-        return $this->belongsTo(City::class);
-    }
+    // public function origin()
+    // {
+    //     return $this->belongsTo(City::class);
+    // }
 
-    public function destiny()
-    {
-        return $this->belongsTo(City::class);
-    }
+    // public function destiny()
+    // {
+    //     return $this->belongsTo(City::class);
+    // }
     
     public function age()
     {
@@ -29,5 +29,10 @@ class Service extends Model
     public function passenger()
     {
         return $this->belongsTo(Passenger::class);
+    }
+
+    public function flight()
+    {
+        return $this->belongsTo(Flight::class);
     }
 }
