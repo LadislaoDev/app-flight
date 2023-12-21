@@ -364,7 +364,6 @@
                     <option v-for="model in models" :key="model.id" :value="model.id">{{ model.name }}</option>
                   </select>
                 </div>
-
                 <div v-if="selectedModel" class="model-container">
                   <div v-for="rowIndex in selectedModel.row" :key="rowIndex" class="row-container">
                     <div v-for="colIndex in selectedModel.column" :key="colIndex" class="place">
@@ -537,7 +536,7 @@ export default {
           ci: this.service.ci,
           door: this.service.door,
           seat: this.service.seat ? this.service.seat.number : null,
-          seat_id: this.service.seat ? this.service.seat.id : null,
+          place_id: this.service.seat ? this.service.seat.id : null,
           weight: this.service.weight,
           quantity: this.service.quantity,
           ticket: this.service.ticket,

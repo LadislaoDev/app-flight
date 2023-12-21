@@ -33,12 +33,13 @@ class ServiceController extends Controller
             'quantity' =>  $request->quantity,
             'ticket' =>  $request->ticket,
             'total' =>  $request->total,
+            'place_id' =>  $request->place_id,
             'age_id' =>  $request->age_id,
             'passenger_id' =>  $request->passenger_id,
             'flight_id' =>  $request->flight_id
         ]);
 
-        DB::table('places')->where('id', $request->seat_id)->update(['state' => 1, 'disabled' => 1]);
+        DB::table('places')->where('id', $request->place_id)->update(['state' => 1, 'disabled' => 1]);
 
         return response()->json(['success' => true, 'data' => $service], 200);
     }

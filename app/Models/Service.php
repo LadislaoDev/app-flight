@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     protected $fillable = [
-        'date', 'door', 'seat', 'weight', 'quantity', 'ticket', 'total', 'age_id', 'passenger_id', 'flight_id'
+        'date', 'door', 'seat', 'weight', 'quantity', 'ticket', 'total', 'place_id', 'age_id', 'passenger_id', 'flight_id'
     ];
 
     // public function origin()

@@ -174,7 +174,7 @@
                   <template v-slot:empty="scope">
                     <div class="text-center">
                       <i class="fa fa-search-minus fa-3x" aria-hidden="true"></i>
-                      <h6>No tienes usuarios registrados</h6>
+                      <h6>No tienes vuelos registrados</h6>
                     </div>
                   </template>
                   <template #table-busy>
