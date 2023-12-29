@@ -49,7 +49,7 @@ class ServiceController extends Controller
         $data = $this->transformer->item($service);
 
         $export = new PdfExport('boarding.pass', ['service' => $data['service']]);
-        return $export->setMargin(2,2,2,2)->download();
+        return $export->setMargin(2,2,2,2)->setSize('100', '120')->download();
     }
 
     public function getCheckinManifest(Request $request)
@@ -59,6 +59,21 @@ class ServiceController extends Controller
         })
         ->where('date', $request->date)
         ->get();
+        
         return new ServiceManifestCollection($services);
+    }
+
+    public function generatePDFManifest(Request $request)
+    {
+        $services = $this->service->whereHas('flight', function ($query) use ($request) {
+            $query->where('number', $request->flight_number);
+        })
+        ->where('date', $request->date)
+        ->get();
+
+        $data = $this->transformer->collection($services);
+
+        $export = new PdfExport('boarding.manifest', ['data' => $data['services']]);
+        return $export->options()->legal()->landscape()->download();
     }
 }

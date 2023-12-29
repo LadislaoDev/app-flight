@@ -17,6 +17,8 @@ $appCss = mix('dist/css/app.css');
   <title>{{ config('app.name') }}</title>
 
   <link rel="stylesheet" href="{{ (str_starts_with($appCss, '//') ? 'http:' : '').$appCss }}">
+  <script src="https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit" async defer>
+  </script> 
 </head>
 <body>
   <div id="app"></div>

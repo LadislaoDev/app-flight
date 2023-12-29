@@ -9,6 +9,20 @@ class ServiceTransformer extends Transformer
 
     public function transform($data)
     {
+        switch ($data['age']['description']) {
+            case 'ADULTOS':
+                $kg = 80;
+                break;
+            case 'MENORES':
+                $kg = 40;
+                break;
+            case 'INFANTE':
+                $kg = 20;
+                break;
+            default:
+                $kg = 80;
+        };
+
         return [
             'id' => $data['id'],
             'date' => Carbon::parse($data['date'])->format('d/m/Y'),
@@ -18,6 +32,7 @@ class ServiceTransformer extends Transformer
             'destiny' => $data['flight']['destiny']['name'],
             'hour' => $data['flight']['hour'],
             'seat' => $data['seat'],
+            'kg' => $kg,
             'weight' => $data['weight'],
             'quantity' => $data['quantity'],
             'ticket' => $data['ticket'],

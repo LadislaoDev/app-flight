@@ -18,6 +18,7 @@ class FlightResource extends JsonResource
             'destiny' => $this->destiny->name,
             'origin_id' => $this->origin->id,
             'destiny_id' => $this->destiny->id,
+            'state' => $this->state == 0 ? 'PENDIENTE' : 'COMPLETADO',
             'hour' => $this->hour,
             'created' => Carbon::parse($this->created_at)->format('d/m/Y'),
             'updated' => Carbon::parse($this->updated_at)->format('d/m/Y'),

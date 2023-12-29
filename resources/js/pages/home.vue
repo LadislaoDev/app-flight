@@ -726,6 +726,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
   .custom-card {
     height: 100%;

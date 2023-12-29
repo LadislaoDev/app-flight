@@ -24,6 +24,28 @@
         </div>
       </b-modal>
       <b-modal
+        v-model="showModalState"
+        :header-bg-variant="'secondary'"
+        size="lg"
+        no-close-on-backdrop
+        hide-footer
+      >
+        <template v-slot:modal-header="{ close }">
+          <h5 class="text-white">Completar Proceso</h5>
+          <b-button squared size="sm" variant="primary" @click="closeModalState">X</b-button>
+        </template>
+        <strong class="fs-4">Realmente desea completar el proceso de vuelo?</strong>
+        <hr>
+        <div class="d-flex justify-content-end">
+          <button @click="closeModalState" type="button" class="btn btn-secondary me-2"><fa icon="times-circle" fixed-width /> Cancelar</button>
+          <button :disabled="loadingState" @click="completeState" type="button" class="btn btn-primary">
+            <b-spinner v-if="loadingState" small variant="light"></b-spinner>
+            <fa v-else icon="check-circle" fixed-width />
+            ACEPTAR
+          </button>
+        </div>
+      </b-modal>
+      <b-modal
         v-model="showModalFlight"
         :header-bg-variant="'secondary'"
         size="lg"
@@ -200,6 +222,9 @@
                   <template v-slot:head(hour)="data">
                     <span>{{ data.label.toUpperCase() }}</span>
                   </template>
+                  <template v-slot:head(state)="data">
+                    <span>{{ data.label.toUpperCase() }}</span>
+                  </template>
                   <template v-slot:head(created)="data">
                     <span>{{ data.label.toUpperCase() }}</span>
                   </template>
@@ -227,6 +252,9 @@
                   <template v-slot:cell(hour)="data">
                     <strong>{{ data.value }}</strong>
                   </template>
+                  <template v-slot:cell(state)="data">
+                    <span v-html="templateStatus(data.value)"></span>
+                  </template>
                   <template v-slot:cell(created)="data">
                     <strong>{{ data.value }}</strong>
                   </template>
@@ -239,6 +267,9 @@
                     </b-button>
                     <b-button @click="openModalDelete(row.item)" size="sm" class="mr-2" variant="warning">
                       <fa icon="ban" fixed-width />
+                    </b-button>
+                    <b-button :disabled="row.item.state == 'COMPLETADO'" @click="openModalState(row.item)" size="sm" class="mr-2" variant="success">
+                      <fa icon="check-circle" fixed-width />
                     </b-button>
                   </template>
                 </b-table>
@@ -283,8 +314,10 @@
         loading: false,
         showModalFlight: false,
         showModalDelete: false,
+        showModalState: false,
         loadingForm: false,
         loadingDelete: false,
+        loadingState: false,
         flight: {
           id: null,
           number: '',
@@ -303,6 +336,7 @@
           { key: 'origin', label: 'Origen'},
           { key: 'destiny', label: 'Destino'},
           { key: 'hour', label: 'Hora'},
+          { key: 'state', label: 'Estado'},
           { key: 'created', label: 'Registrado'},
           { key: 'updated', label: 'Actualizado'},
           'opciones',
@@ -378,6 +412,16 @@
         this.flightId = null
         this.showModalDelete = false
       },
+
+      openModalState(row) {
+        this.flightId = row.id
+        this.showModalState = true
+      },
+  
+      closeModalState() {
+        this.flightId = null
+        this.showModalState = false
+      },
   
       cleanFlight() {
         this.flight = {
@@ -387,6 +431,25 @@
           origin: '',
           destiny: '',
           hour: '',
+        }
+      },
+
+      templateStatus(status) {
+        switch (status) {
+          case 'PENDIENTE':
+            return (
+              "<span class='badge bg-secondary'>PENDIENTE</span>"
+            );
+            break;
+          case 'COMPLETADO':
+            return (
+              "<span class='badge bg-info text-dark'>COMPLETADO</span>"
+            );
+            break;
+          default:
+            return (
+              "<span class='badge bg-info text-dark'>COMPLETADO</span>"
+            );
         }
       },
   
@@ -454,6 +517,25 @@
             this.loadingForm = false
           })
         }
+      },
+
+      async completeState() {
+        this.loadingState = true
+        axios({
+          method: 'get',
+          url: `/api/complete/flight/${this.flightId}`,
+        })
+        .then((response) => {
+          if (response.data.success) {
+            this.closeModalState()
+            this.getFlights()
+          }
+          
+          this.loadingState = false
+        })
+        .catch((error) => {
+          this.loadingState = false
+        })
       },
   
       async deleteFlight() {

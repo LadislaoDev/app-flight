@@ -52,10 +52,10 @@ return [
         'enabled' => true,
         'binary'  => '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf"',
         'timeout' => false,
-        'options' => [
-            'page-width' => 100,  // en milímetros
-            'page-height' => 120,
-        ],
+        // 'options' => [
+        //     'page-width' => 100,
+        //     'page-height' => 120,
+        // ],
         'env'     => [],
     ],
     

@@ -77,29 +77,25 @@
 </head>
 <body>
 <div class="boarding-pass">
-        <!-- Agregar imagen de la aerolínea en la parte superior izquierda -->
-        <img class="logo" src="{{url('/img/logo.jpeg')}}" alt="">
+        <img class="logo" src="{{url('/img/logo2.jpg')}}" alt="">
 
         <div class="header">
             <h3>TARJETA DE EMBARQUE</h3>
         </div>
 
         <div class="intro-text">
-            <!-- Cuatro filas de texto centrado en el inicio -->
             <div>BOARDING PASS</div>
             <div>EMPRESA: AMAZ</div>
             <div>TICKET SIN VALOR PARA CREDITO FISCAL</div>
         </div>
 
         <div class="additional-text">
-            <!-- Dos filas adicionales alineadas a la derecha -->
             <div>Casa Matriz: Av. Bolivia N° 123</div>
             <div>TELF: (+591 3-356897)</div>
         </div>
         <hr>
         <div class="info-container">
             <div class="flight-info">
-                <!-- Información del vuelo en la primera columna -->
                 <div><b>FECHA:</b> {{ $service['date'] }}</div>
                 <div><b>HORA:</b> {{ $service['hour'] }}</div>
                 <div><b>NOMBRE:</b> {{ $service['passenger_name'] }}</div>

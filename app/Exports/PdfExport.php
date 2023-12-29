@@ -24,6 +24,17 @@ class PdfExport
         return $this;
     }
 
+    public function setSize($width, $height)
+    {
+        $options = [
+            'page-width' => $width,
+            'page-height' => $height,
+        ];
+
+        $this->pdf->setOptions($options);
+        return $this;
+    }
+
     public function options()
     {
         $this->pdf->setOption('margin-top', 5)->setOption('margin-bottom', 5)->setOption('margin-left', 5)->setOption('margin-right', 5);

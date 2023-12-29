@@ -21,6 +21,11 @@
                 <fa icon="search" fixed-width />
               </button>
             </div>
+            <div class="d-table-cell align-middle ml-2">
+              <button :disabled="isBotonDeshabilitado" @click="downloadManifest" type="button" class="btn btn-success btn-sm btn-height ms-1">
+                <fa icon="download" fixed-width />
+              </button>
+            </div>
           </div>
         </div>
         <hr>
@@ -156,6 +161,10 @@ export default {
   },
 
   computed: {
+    isBotonDeshabilitado() {
+      return !this.items.length > 0 ? true : false
+    },
+
     totalPesoPax() {
       return this.items.reduce((total, item) => total + (item.weight + item.kg), 0);
     },
@@ -198,6 +207,33 @@ export default {
           .then((response) => {
             this.items = response.data.data
             this.item = this.items[0]
+          })
+          .catch((error) => {
+            this.loading = false
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      } catch (err) {
+        this.loading = false
+      }
+    },
+
+    async downloadManifest() {
+      this.loading = true
+
+      try {
+        axios({
+          method: 'post',
+          url: `/api/manifest`,
+          responseType: 'arraybuffer',
+          data: {date: this.date, flight_number: this.flight_number}
+        })
+          .then((response) => {
+            let file = new Blob([response.data], {type: 'application/pdf'})
+            let fileUrl = URL.createObjectURL(file)
+            window.open(fileUrl) 
+            this.loading = false
           })
           .catch((error) => {
             this.loading = false

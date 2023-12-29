@@ -43,9 +43,15 @@
                       </router-link>
                     </div>
 
+                    <vue-recaptcha
+                      ref="recaptcha"
+                      @verify="onCaptchaVerified"
+                      sitekey="6LeMJD4pAAAAAOdN21qr3B2pnMfzGAdQ8wn3R4JN"
+                    ></vue-recaptcha>
+
                     <div class="col-12">
                       <div class="d-grid gap-2">
-                        <v-button :loading="form.busy" :type="'secondary'">
+                        <v-button :disabled="!captchaResponse" :loading="form.busy" :type="'secondary'">
                           INGRESAR
                         </v-button>
                       </div>
@@ -66,11 +72,11 @@
 <script>
 import Form from 'vform'
 import Cookies from 'js-cookie'
-import LoginWithGithub from '~/components/LoginWithGithub'
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
   components: {
-    LoginWithGithub
+    VueRecaptcha,
   },
 
   middleware: 'guest',
@@ -84,25 +90,30 @@ export default {
       name: '',
       password: ''
     }),
-    remember: false
+    remember: false,
+    captchaResponse: null,
   }),
 
   methods: {
+    onCaptchaVerified(response) {
+      this.captchaResponse = response;
+    },
+
     async login () {
-      // Submit the form.
+      if (this.captchaResponse) {
       const { data } = await this.form.post('/api/login')
 
-      // Save the token.
       this.$store.dispatch('auth/saveToken', {
         token: data.token,
         remember: this.remember
       })
 
-      // Fetch the user.
       await this.$store.dispatch('auth/fetchUser')
 
-      // Redirect home.
       this.redirect()
+      } else {
+        alert('Por favor, completa el reCAPTCHA.');
+      }
     },
 
     redirect () {

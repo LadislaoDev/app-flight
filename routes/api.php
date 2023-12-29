@@ -41,6 +41,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('services/{service}', [ServiceController::class, 'generatePDF']);
     Route::post('services/manifest', [ServiceController::class, 'getCheckinManifest']);
 
+    Route::post('manifest', [ServiceController::class, 'generatePDFManifest']);
+
     //users
     Route::get('users', [UserController::class, 'index']);
     Route::post('register/user', [UserController::class, 'register']);
@@ -53,9 +55,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('flights/search', [FlightController::class, 'search']);
     Route::put('update/flight/{flight}', [FlightController::class, 'update']);
     Route::delete('delete/flight/{flight}', [FlightController::class, 'delete']);
+    Route::get('complete/flight/{flight}', [FlightController::class, 'complete']);
 });
 
 Route::group(['middleware' => 'guest:api'], function () {
+
     Route::post('login', [LoginController::class, 'login']);
     Route::post('register', [RegisterController::class, 'register']);
 

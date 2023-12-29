@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `flights` (
   `origin_id` bigint(20) unsigned NOT NULL,
   `destiny_id` bigint(20) unsigned NOT NULL,
   `hour` time NOT NULL,
+  `state` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -67,12 +68,10 @@ CREATE TABLE IF NOT EXISTS `flights` (
   KEY `flights_destiny_id_foreign` (`destiny_id`),
   CONSTRAINT `flights_destiny_id_foreign` FOREIGN KEY (`destiny_id`) REFERENCES `cities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `flights_origin_id_foreign` FOREIGN KEY (`origin_id`) REFERENCES `cities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table flight.flights: ~1 rows (approximately)
 /*!40000 ALTER TABLE `flights` DISABLE KEYS */;
-INSERT INTO `flights` (`id`, `number`, `date`, `origin_id`, `destiny_id`, `hour`, `created_at`, `updated_at`) VALUES
-	(1, '1', '2023-12-21', 2, 1, '21:17:00', '2023-12-21 22:16:13', '2023-12-21 22:16:13');
 /*!40000 ALTER TABLE `flights` ENABLE KEYS */;
 
 -- Dumping structure for table flight.passengers
@@ -110,9 +109,9 @@ CREATE TABLE IF NOT EXISTS `places` (
   PRIMARY KEY (`id`),
   KEY `places_type_id_foreign` (`type_id`),
   CONSTRAINT `places_type_id_foreign` FOREIGN KEY (`type_id`) REFERENCES `types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table flight.places: ~68 rows (approximately)
+-- Dumping data for table flight.places: ~70 rows (approximately)
 /*!40000 ALTER TABLE `places` DISABLE KEYS */;
 INSERT INTO `places` (`id`, `number`, `order`, `state`, `disabled`, `type_id`, `created_at`, `updated_at`) VALUES
 	(2, '2A', 2, 0, 0, 1, '2023-11-17 17:49:27', '2023-11-17 17:49:27'),
@@ -157,7 +156,7 @@ INSERT INTO `places` (`id`, `number`, `order`, `state`, `disabled`, `type_id`, `
 	(41, '9D', 61, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
 	(42, '10D', 62, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
 	(43, '11D', 63, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
-	(44, '1E', 66, 1, 1, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
+	(44, '1E', 66, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
 	(45, '2E', 67, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
 	(46, '3E', 68, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
 	(47, '4E', 69, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
@@ -182,7 +181,9 @@ INSERT INTO `places` (`id`, `number`, `order`, `state`, `disabled`, `type_id`, `
 	(66, '10F', 88, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
 	(67, '11F', 89, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
 	(68, '12F', 90, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
-	(69, '13F', 91, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25');
+	(69, '13F', 91, 0, 0, 1, '2023-11-19 13:22:24', '2023-11-19 13:22:25'),
+	(70, '2A', 3, 0, 0, 2, '2023-12-28 16:25:13', '2023-12-28 16:25:13'),
+	(71, '3A', 4, 0, 0, 2, '2023-12-28 16:25:57', '2023-12-28 16:25:57');
 /*!40000 ALTER TABLE `places` ENABLE KEYS */;
 
 -- Dumping structure for table flight.services
@@ -210,12 +211,10 @@ CREATE TABLE IF NOT EXISTS `services` (
   CONSTRAINT `services_flight_id_foreign` FOREIGN KEY (`flight_id`) REFERENCES `flights` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `services_passenger_id_foreign` FOREIGN KEY (`passenger_id`) REFERENCES `passengers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `services_place_id_foreign` FOREIGN KEY (`place_id`) REFERENCES `places` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table flight.services: ~0 rows (approximately)
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
-INSERT INTO `services` (`id`, `date`, `door`, `seat`, `weight`, `quantity`, `ticket`, `total`, `place_id`, `age_id`, `passenger_id`, `flight_id`, `created_at`, `updated_at`) VALUES
-	(1, '2023-12-21', 1, '1E', 100, 1, '10', 100, 44, 1, 1, 1, '2023-12-21 22:16:46', '2023-12-21 22:16:46');
 /*!40000 ALTER TABLE `services` ENABLE KEYS */;
 
 -- Dumping structure for table flight.types
@@ -227,12 +226,13 @@ CREATE TABLE IF NOT EXISTS `types` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table flight.types: ~1 rows (approximately)
+-- Dumping data for table flight.types: ~2 rows (approximately)
 /*!40000 ALTER TABLE `types` DISABLE KEYS */;
 INSERT INTO `types` (`id`, `name`, `row`, `column`, `created_at`, `updated_at`) VALUES
-	(1, 'MODELO 1', 7, 13, '2023-11-17 17:48:24', '2023-11-17 17:48:25');
+	(1, 'MODELO 1', 7, 13, '2023-11-17 17:48:24', '2023-11-17 17:48:25'),
+	(2, 'MODELO 2', 8, 13, '2023-12-28 16:23:29', '2023-12-28 16:23:30');
 /*!40000 ALTER TABLE `types` ENABLE KEYS */;
 
 -- Dumping structure for table flight.users
